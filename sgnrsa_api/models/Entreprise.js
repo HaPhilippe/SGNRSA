@@ -1,40 +1,54 @@
-
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../utils/sequerize');
-/**
-* fonction model pour la creation de la table  Entreprise
-* @author Philippe <philippehatangimana.29dg@gmail.com>
-* @date 07/08/2024
-* @returns 
-*/
 
+
+/**
+ * Modèle pour la création de la table Entreprise
+ * @author Philippe <philippehatangimana.29dg@gmail.com>
+ * @date 07/08/2024
+ */
 const Entreprise = sequelize.define("entreprise", {
     ID_ENTREPR: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
-    NOM_E: {
+    NOM_ENTREPR: {
         type: DataTypes.STRING(100),
-        allowNull: false
+        allowNull: false,
     },
-    ADRESSE_E: {
+    ADRESSE_ENTREPR: {
         type: DataTypes.STRING(200),
-        allowNull: false
+        allowNull: false,
     },
     SECTEUR: {
+        type: DataTypes.STRING(250),
+        allowNull: false,
+    },
+    LOGO_ENTREPR: {
+        type: DataTypes.STRING(250),
+        allowNull: true
+    },
+    NOM_TUT: {
         type: DataTypes.STRING(50),
-        allowNull: false
+        allowNull: false,
+    },
+    PRENOM_TUT: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+    },
+    EMAIL: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
     },
     DATE_INSERTION: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false,
         defaultValue: DataTypes.NOW
-    }
+    },
 }, {
-    freezeTableName: true,
     tableName: 'entreprise',
-    timestamps: false
-})
-module.exports = Entreprise
+    timestamps: false,
+});
+
+module.exports = Entreprise;

@@ -11,6 +11,8 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import { CustomerService } from "./service/CustomerService";
+// console.log(CustomerService);
+
 
 
 
@@ -20,15 +22,17 @@ import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown } from 'primereact/dropdown';
 import { ProductService } from './service/ProductService';
 import fetchApi from "../../helpers/fetchApi";
-
-
+import { Toast } from "primereact/toast";
+import { Button } from "primereact/button";
 
 
 
 export default function RootPage() {
 
-    const [products, setProducts] = useState(null);
-    
+    const [rapport, setRapport] = useState([]);
+    const [loading, setLoading] = useState(true); // État de chargement
+
+
     const [statuses] = useState(['INSTOCK', 'LOWSTOCK', 'OUTOFSTOCK']);
 
     useEffect(() => {
@@ -65,27 +69,27 @@ export default function RootPage() {
         return <InputText type="text" value={options.value} onChange={(e) => options.editorCallback(e.target.value)} />;
     };
 
-    const statusEditor = (options) => {
-        return (
-            <Dropdown
-                value={options.value}
-                options={statuses}
-                onChange={(e) => options.editorCallback(e.value)}
-                placeholder="Select a Status"
-                itemTemplate={(option) => {
-                    return <Tag value={option} severity={getSeverity(option)}></Tag>;
-                }}
-            />
-        );
-    };
+    // const statusEditor = (options) => {
+    //     return (
+    //         <Dropdown
+    //             value={options.value}
+    //             options={statuses}
+    //             onChange={(e) => options.editorCallback(e.value)}
+    //             placeholder="Select a Status"
+    //             itemTemplate={(option) => {
+    //                 return <Tag value={option} severity={getSeverity(option)}></Tag>;
+    //             }}
+    //         />
+    //     );
+    // };
 
-    const priceEditor = (options) => {
-        return <InputNumber value={options.value} onValueChange={(e) => options.editorCallback(e.value)} mode="currency" currency="USD" locale="en-US" />;
-    };
+    // const priceEditor = (options) => {
+    //     return <InputNumber value={options.value} onValueChange={(e) => options.editorCallback(e.value)} mode="currency" currency="USD" locale="en-US" />;
+    // };
 
-    const statusBodyTemplate = (rowData) => {
-        return <Tag value={rowData.inventoryStatus} severity={getSeverity(rowData.inventoryStatus)}></Tag>;
-    };
+    // const statusBodyTemplate = (rowData) => {
+    //     return <Tag value={rowData.inventoryStatus} severity={getSeverity(rowData.inventoryStatus)}></Tag>;
+    // };
 
     const priceBodyTemplate = (rowData) => {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(rowData.price);
@@ -101,9 +105,10 @@ export default function RootPage() {
 
     const [customers, setCustomers] = useState([]);
 
-    console.log(customers, 'customers');
+    // console.log(customers, 'customers');
 
     const [expandedRows, setExpandedRows] = useState([]);
+    const toast = useRef(null);
 
     useEffect(() => {
         CustomerService.getCustomersMedium().then((data) => setCustomers(data));
@@ -137,11 +142,11 @@ export default function RootPage() {
         );
     };
 
-    const etudiantBodyTemplate = (rowData)=>{
+    const etudiantBodyTemplate = (rowData) => {
         return (
             <div className="flex align-items-center gap-2">
-                 <span>{rowData.etudiant.personne.NOM} </span>
-                 <span> {rowData.etudiant.personne.PRENOM}</span>
+                <span>{rowData.etudiant.NOM} </span>
+                <span> {rowData.etudiant.PRENOM}</span>
             </div>
         );
     }
@@ -155,7 +160,7 @@ export default function RootPage() {
 
         if (rapport) {
             for (let rappo of rapport) {
-                if (rappo.RAPPORT === name) {
+                if (rappo.NOM === name) {
                     total++;
                 }
             }
@@ -183,11 +188,11 @@ export default function RootPage() {
     //     }
     // };
 
-    
-    const [rapport,setRapport] = useState([]);
 
-    console.log(rapport,'rapport');
-    
+
+
+     console.log(rapport, 'rapport');
+
     // useEffect(() => {
     //      async function name() {
     //            const res = await fetchApi(`/rh/stage/fetchstage?`);
@@ -195,70 +200,226 @@ export default function RootPage() {
     //             console.log(rapport,'res');
     //     }
     //     name()
-        
+
     // },[products])
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             // const response = await fetchApi(`/rapport_stage/faculte_depar/fetch?`);
+    //             const response = await fetchApi(`/rapport_stage/faculte_depar/fetch?`);
+    //             console.log(response,'rspons');
+
+    //             setRapport(response.result.data);
+    //         } catch (error) {
+    //             console.error('Erreur lors de la récupérations des données', error);
+    //         }
+    //     };
+    //     fetchData();
+    // }, [])
 
     useEffect(() => {
         const fetchData = async () => {
-          try {
-            const response = await fetchApi(`/rh/stage/fetchstage?`);
-    
-            setRapport(response.result.data);
-          } catch (error) {
-            console.error('Erreur lors de la récupérations des données', error);
-          }
+            setLoading(true); // Début du chargement
+            try {
+                const response = await fetchApi(`/rapport_stage/faculte_depar/fetch?`);
+                console.log(response, 'response');
+
+                // Formater les données
+                const formattedData = response.result.data.map(item => ({
+                    id: item.ID_DEPARTEMENT,
+                    name: item.NOM_DEPARTEMENT,
+                    country: {
+                        name: item.faculte.NOM,
+                        last_name: item.faculte.DESCRIPTION,
+                        code: item.faculte.ID_FAC
+                    },
+                    company: item.DESIGNATION_DEP,
+                    date: item.DATE_INSERTION,
+                    status: 'active',
+                    verified: true,
+                    activity: 10,
+                    representative: {
+                        name: item.faculte.NOM,
+                        image: 'faculte_image.png'
+                    },
+                    balance: 0
+                }));
+
+                setRapport(formattedData);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des données', error);
+            } finally {
+                setLoading(false); // Fin du chargement
+            }
         };
+
         fetchData();
-      }, [])
+    }, []);
+
+
+
+
+
+
+    const onRowExpand = (event) => {
+        toast.current.show({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
+    };
+
+    const onRowCollapse = (event) => {
+        toast.current.show({ severity: 'success', summary: 'Product Collapsed', detail: event.data.name, life: 3000 });
+    };
+
+    const expandAll = () => {
+        let _expandedRows = {};
+
+
+
+        rapport.forEach((rap) => (_expandedRows[`${rap.ID_RAPPORT}`] = true));
+
+        setExpandedRows(_expandedRows);
+    };
+
+    const collapseAll = () => {
+        setExpandedRows(null);
+    };
+
+    const formatCurrency = (value) => {
+        return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+    };
+
+    // const amountBodyTemplate = (rowData) => {
+    //     return formatCurrency(rowData.amount);
+    // };
+
+    const statusOrderBodyTemplate = (rowData) => {
+        return <Tag value={rowData.status.toLowerCase()} severity={getOrderSeverity(rowData)}></Tag>;
+    };
+
+    const searchBodyTemplate = () => {
+        return <Button icon="pi pi-search" />;
+    };
+
+    const imageBodyTemplate = (rowData) => {
+        return <img src={`https://primefaces.org/cdn/primereact/images/product/${rowData.image}`} alt={rowData.image} width="64px" className="shadow-4" />;
+    };
+
+    // const priceBodyTemplate = (rowData) => {
+    //     return formatCurrency(rowData.price);
+    // };
+
+    const ratingBodyTemplate = (rowData) => {
+        return <Rating value={rowData.rating} readOnly cancel={false} />;
+    };
+
+    const statusBodyTemplate = (rowData) => {
+        return <Tag value={rowData.inventoryStatus} severity={getProductSeverity(rowData)}></Tag>;
+    };
+
+    const getProductSeverity = (product) => {
+        switch (product.inventoryStatus) {
+            case 'INSTOCK':
+                return 'success';
+
+            case 'LOWSTOCK':
+                return 'warning';
+
+            case 'OUTOFSTOCK':
+                return 'danger';
+
+            default:
+                return null;
+        }
+    };
+
+    const getOrderSeverity = (order) => {
+        switch (order.status) {
+            case 'DELIVERED':
+                return 'success';
+
+            case 'CANCELLED':
+                return 'danger';
+
+            case 'PENDING':
+                return 'warning';
+
+            case 'RETURNED':
+                return 'info';
+
+            default:
+                return null;
+        }
+    };
+
+    const allowExpansion = (rowData) => {
+        return rowData.orders.length > 0;
+    };
+
+
+    // const allowExpansion = (rowData = 1) => {
+    //     return rowData > 0;
+    // };
+    const rowExpansionTemplate = (data) => {
+        return (
+            <div className="p-3">
+                <h5>Orders for {data.name}</h5>
+                <DataTable value={data.orders}>
+                    <Column field="id" header="Id" sortable></Column>
+                    <Column field="customer" header="Customer" sortable></Column>
+                    <Column field="date" header="Date" sortable></Column>
+                    <Column field="amount" header="Amount" body={amountBodyTemplate} sortable></Column>
+                    <Column field="status" header="Status" body={statusOrderBodyTemplate} sortable></Column>
+                    <Column headerStyle={{ width: '4rem' }} body={searchBodyTemplate}></Column>
+                </DataTable>
+            </div>
+        );
+    };
+
+    const header = (
+        <div className="flex flex-wrap justify-content-end gap-2">
+            <Button icon="pi pi-plus" label="Expand All" onClick={expandAll} text />
+            <Button icon="pi pi-minus" label="Collapse All" onClick={collapseAll} text />
+        </div>
+    );
+
 
     return (
         <>
             <div className="px-4 py-3 main_content">
-                <h1 className="mb-3">Accueiel</h1>
+                <h1 className="mb-3">Home</h1>
 
-                <div>
+                {/* <div>
                     <h4>List prsonnalisée !</h4>
-                </div>
+                </div> */}
                 <div className="content">
-                    {/* <div className="d-flex">
-                                      <div className="div flex-fill">
-                                                <DashboardSkeletons />
-                                                <HomeSkeletons />
-                                      </div>
-                                      <AsideSkeletons />
-                            </div> */}
-
-
-                    {/* <div className="card p-fluid mb-4">
-                        <DataTable value={products} editMode="row" dataKey="id" onRowEditComplete={onRowEditComplete} tableStyle={{ minWidth: '50rem' }}>
-                            <Column field="code" header="Code" editor={(options) => textEditor(options)} style={{ width: '20%' }}></Column>
-                            <Column field="name" header="Name" editor={(options) => textEditor(options)} style={{ width: '20%' }}></Column>
-                            <Column field="inventoryStatus" header="Status" body={statusBodyTemplate} editor={(options) => statusEditor(options)} style={{ width: '20%' }}></Column>
-                            <Column field="price" header="Price" body={priceBodyTemplate} editor={(options) => priceEditor(options)} style={{ width: '20%' }}></Column>
-                            <Column rowEditor={allowEdit} headerStyle={{ width: '10%', minWidth: '8rem' }} bodyStyle={{ textAlign: 'center' }}></Column>
-                        </DataTable>
-                    </div> */}
-
-
-
-
-
-
-
+                   
 
                     <div className="card">
-                        <DataTable value={rapport} rowGroupMode="subheader" groupRowsBy="representative.SUJET"
-                            sortMode="single" sortField="representative.SUJET" sortOrder={1}
+                        <DataTable value={rapport} rowGroupMode="subheader" groupRowsBy="representative.name"
+                            sortMode="single" sortField="representative.name" sortOrder={1}
                             expandableRowGroups expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)}
                             rowGroupHeaderTemplate={headerTemplate} rowGroupFooterTemplate={footerTemplate} tableStyle={{ minWidth: '50rem' }}>
-                            <Column field="etudiant" header="Nom et Prenom" body={etudiantBodyTemplate} style={{ width: '20%' }}></Column>
-                            <Column field="country" header="Faculte" body={countryBodyTemplate} style={{ width: '20%' }}></Column>
-                            <Column field="company" header="Departement" style={{ width: '20%' }}></Column>
-                            {/* <Column field="status" header="Status" body={statusBodyTemplate} style={{ width: '20%' }}></Column> */}
-                            <Column field="date" header="Date de Depot" style={{ width: '20%' }}></Column>
+                            <Column field="name" header="Name" style={{ width: '20%' }}></Column>
+                            <Column field="country" header="Country" body={countryBodyTemplate} style={{ width: '20%' }}></Column>
+                            <Column field="company" header="Company" style={{ width: '20%' }}></Column>
+                            <Column field="status" header="Status" body={statusBodyTemplate} style={{ width: '20%' }}></Column>
+                            <Column field="date" header="Date" style={{ width: '20%' }}></Column>
                         </DataTable>
                     </div>
 
+                    {/* <div>
+                        {loading ? (
+                            <p>Chargement des données...</p> // Indicateur de chargement
+                        ) : (
+                            rapport.map(customer => (
+                                <div key={customer.id}>
+                                    <h3>{customer.name}</h3>
+                                    <p>{customer.company}</p>
+                                    <p>{customer.country.name}</p>
+                                </div>
+                            ))
+                        )}
+                    </div> */}
 
 
 
@@ -270,3 +431,4 @@ export default function RootPage() {
 
     )
 }
+

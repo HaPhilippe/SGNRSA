@@ -282,23 +282,23 @@ export default function SideBar({ isMobile, setAsideVisible }) {
                                 <div className="down_caret">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" className="bi bi-chevron-right" viewBox="0 0 16 16">
                                         <path fillRule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
-                                    </svg> 
+                                    </svg>
                                 </div>
                             </div>
                         </a>
                     </div>
-                   
+
                     <div className="sub-menus collapse" id="rh">
                         <div className='nav-item'>
 
                             <div className='nav-item'>
 
-                                <Link to={"personne"} className="text-decoration-none rounded d-block" href="/">
+                                <Link to={"facultedep"} className="text-decoration-none rounded d-block" href="/">
                                     <div className="d-flex align-items-center justify-content-between py-2 px-3">
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <div className="menu-icon">
                                             </div>
-                                            <span className='menu-title'>Personne</span>
+                                            <span className='menu-title'>Faculté</span>
                                         </div>
                                     </div>
                                 </Link>
@@ -306,18 +306,73 @@ export default function SideBar({ isMobile, setAsideVisible }) {
                         </div>
 
                     </div>
-            
+
                     <div className="sub-menus collapse" id="rh">
                         <div className='nav-item'>
 
                             <div className='nav-item'>
 
-                                <Link to={"departement"} className="text-decoration-none rounded d-block" href="/">
+                                <Link to={"entreprise"} className="text-decoration-none rounded d-block" href="/">
                                     <div className="d-flex align-items-center justify-content-between py-2 px-3">
                                         <div className='d-flex align-items-center justify-content-between'>
                                             <div className="menu-icon">
                                             </div>
-                                            <span className='menu-title'>Departement</span>
+                                            <span className='menu-title'>Entreprise</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="sub-menus collapse" id="rh">
+                        <div className='nav-item'>
+
+                            <div className='nav-item'>
+
+                                <Link to={"encadrant"} className="text-decoration-none rounded d-block" href="/">
+                                    <div className="d-flex align-items-center justify-content-between py-2 px-3">
+                                        <div className='d-flex align-items-center justify-content-between'>
+                                            <div className="menu-icon">
+                                            </div>
+                                            <span className='menu-title'>Encadrant</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="sub-menus collapse" id="rh">
+                        <div className='nav-item'>
+
+                            <div className='nav-item'>
+
+                                <Link to={"etudiant"} className="text-decoration-none rounded d-block" href="/">
+                                    <div className="d-flex align-items-center justify-content-between py-2 px-3">
+                                        <div className='d-flex align-items-center justify-content-between'>
+                                            <div className="menu-icon">
+                                            </div>
+                                            <span className='menu-title'>Etudiant</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                    
+                  
+                    <div className="sub-menus collapse" id="rh">
+                        <div className='nav-item'>
+
+                            <div className='nav-item'>
+
+                                <Link to={"rapport"} className="text-decoration-none rounded d-block" href="/">
+                                    <div className="d-flex align-items-center justify-content-between py-2 px-3">
+                                        <div className='d-flex align-items-center justify-content-between'>
+                                            <div className="menu-icon">
+                                            </div>
+                                            <span className='menu-title'>Rapports</span>
                                         </div>
                                     </div>
                                 </Link>

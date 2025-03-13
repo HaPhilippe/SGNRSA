@@ -1,0 +1,46 @@
+
+.cart{
+    background-color: white;
+    margin-bottom: 4%;
+    color: #2C3E50;
+}
+.cart p{
+    /* background-color: #2C3E50; */
+    color: #2C3E50;
+}
+
+.cart p span{
+    color: #2C3E50;
+}
+.pdf-container {
+    overflow: auto; /* Pour activer le défilement */
+}
+
+/* Pour les navigateurs WebKit (Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #d8d5d5;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #2C3E50;
+    width: 8px;
+}
+
+/* Pour Firefox */
+.pdf-container {
+    scrollbar-width: thin;
+    scrollbar-color: #2C3E50 #939699;
+}
+iframe{
+    background: #E67E22;
+
+}

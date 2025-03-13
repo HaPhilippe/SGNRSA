@@ -1,40 +1,34 @@
-
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../utils/sequerize');
 
-/**
-* fonction model pour la creation de la table  etudiant
-* @author Philippe <philippehatangimana.29dg@gmail.com>
-* @date 07/08/2024
-* @returns 
-*/
 
+/**
+ * Modèle pour la création de la table Faculte
+ * @author Philippe <philippehatangimana.29dg@gmail.com>
+ * @date 07/08/2024
+ */
 const Faculte = sequelize.define("faculte", {
     ID_FAC: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
-  
     NOM: {
         type: DataTypes.STRING(100),
         allowNull: false,
     },
-    DESCRIPTION:{
-     type:DataTypes.STRING(250),
-     allowNull:true
+    DESCRIPTION: {
+        type: DataTypes.STRING(250),
+        allowNull: true, // Permet de laisser vide
     },
     DATE_INSERTION: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false,
         defaultValue: DataTypes.NOW
-    }
+    },
 }, {
-    freezeTableName: true,
     tableName: 'faculte',
-    timestamps: false
-})
+    timestamps: false,
+});
 
-
-module.exports = Faculte
+module.exports = Faculte;

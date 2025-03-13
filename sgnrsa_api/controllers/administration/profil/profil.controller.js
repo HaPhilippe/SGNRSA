@@ -7,8 +7,6 @@ const Profil = require("../../../models/Profil")
 const Roles = require("../../../models/Roles")
 const Profil_roles = require("../../../models/Profil_roles")
 
-
-
 /**
  * Permet de creer un profil
  * @date  06/08/2024

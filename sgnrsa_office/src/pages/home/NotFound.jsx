@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom'
 
 export default function NotFound() {
     useEffect(() => {
-        document.title = "AFPM | page non trouvé"
+        document.title = "SGNRSA | page non trouvé"
     }, [])
     const user = useSelector(userSelector)
     const navigate = useNavigate()

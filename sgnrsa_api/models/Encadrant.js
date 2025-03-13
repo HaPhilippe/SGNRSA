@@ -1,21 +1,17 @@
-
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../utils/sequerize');
 
-const Entreprise = require('./Entreprise');
-/**
-* fonction model pour la creation de la table  Encadrant
-* @author Philippe <philippehatangimana.29dg@gmail.com>
-* @date 07/08/2024
-* @returns 
-*/
 
-const Encadrant = sequelize.define("encadrant", {
+/**
+ * Modèle pour la création de la table encadrant
+ * @author Philippe <philippehatangimana.29dg@gmail.com>
+ * @date 07/08/2024
+ */
+const Encandrant = sequelize.define("encandrant", {
     ID_ENCA: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     NOM: {
         type: DataTypes.STRING(50),
@@ -28,27 +24,23 @@ const Encadrant = sequelize.define("encadrant", {
     EMAIL: {
         type: DataTypes.STRING(100),
         allowNull: false,
-        unique: true
     },
     TITRE: {
         type: DataTypes.STRING(50),
-        allowNull: false
+        allowNull: false,
     },
-    ID_ENTREPRISE: {
-        type: DataTypes.INTEGER,
-        allowNull: false
+    TEL: {
+      type:DataTypes.STRING(20),
+      allowNull:false
     },
     DATE_INSERTION: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false,
         defaultValue: DataTypes.NOW
-    }
+    },
 }, {
-    freezeTableName: true,
-    tableName: 'encadrant',
-    timestamps: false
-})
+    tableName: 'encandrant',
+    timestamps: false,
+});
 
-
-Encadrant.belongsTo(Entreprise,{ foreignKey: "ID_ENTREPRISE", as: 'entreprise' })
-module.exports = Encadrant
+module.exports = Encandrant;

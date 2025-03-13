@@ -1,74 +1,72 @@
-
-const { Sequelize, DataTypes, STRING } = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../utils/sequerize');
 const Departement = require('./Departement');
+const Encandrant = require('./Encadrant');
+
 
 
 /**
-* fonction model pour la creation de la table  etudiant
-* @author Philippe <philippehatangimana.29dg@gmail.com>
-* @date 07/08/2024
-* @returns 
-*/
-
+ * Modèle pour la création de la table etudiant
+ * @author Philippe <philippehatangimana.29dg@gmail.com>
+ * @date 07/08/2024
+ */
 const Etudiant = sequelize.define("etudiant", {
     ID_ETUD: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     NOM: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(100),
         allowNull: false,
     },
     PRENOM: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(200),
         allowNull: false,
     },
     EMAIL: {
         type: DataTypes.STRING(100),
         allowNull: false,
-        unique: true
     },
+
     ID_DEPARTEMENT: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    NUMERO_CARTE: {
-        type: DataTypes.STRING(30),
         allowNull: false
     },
-    GENRE:{
-        type:DataTypes.STRING(10),
-        allowNull:false
+    ID_ENCA: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
-    PROFIL:{
-        type:STRING(100),
-        allowNull:true
+   
+    NUMERO_REF: {
+        type: DataTypes.STRING(20),
+        allowNull: false
     },
-    PROVINCE:{
-        type:STRING(100),
-        allowNull:true
-    },
-    COMMUNE:{
-        type:STRING(100),
-        allowNull:true
-    },
-    ZONE:{
-        type:STRING(100),
-        allowNull:true
-    },
-    DATE_INSERTION: {
+    DATE_NAISSANCE: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: false
+    },
+    GENRE: {
+        type: DataTypes.TINYINT(2),
+        allowNull: false
+    },
+    PROFIL: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+    },
+    ADRESS: {
+        type: DataTypes.STRING(150),
+        allowNull: false,
+    },
+    DATE_ENREGISTREMNT: {
+        type: DataTypes.DATE,
+        allowNull: false,
         defaultValue: DataTypes.NOW
-    }
+    },
 }, {
-    freezeTableName: true,
     tableName: 'etudiant',
-    timestamps: false
-})
-
-Etudiant.belongsTo(Departement, { foreignKey: "ID_DEPARTEMENT", as: "departement" });
-module.exports = Etudiant
+    timestamps: false,
+});
+Etudiant.belongsTo(Departement,{foreignKey:'ID_DEPARTEMENT',as:'departement'});
+Etudiant.belongsTo(Encandrant,{foreignKey:'ID_ENCA',as:'encandrant'});
+module.exports = Etudiant;

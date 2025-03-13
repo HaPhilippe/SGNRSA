@@ -1,0 +1,20 @@
+.button-group {
+    display: flex;
+    gap: 10px; /* Espacement entre les boutons */
+    margin-top: 10px; /* Espacement au-dessus des boutons */
+}
+
+.btn {
+    padding: 10px 15px; /* Rembourrage pour les boutons */
+    border: none; /* Retire la bordure */
+    border-radius: 5px; /* Coins arrondis */
+    cursor: pointer; /* Curseur en main */
+    text-decoration: none; /* Supprime le soulignement */
+    color: white; /* Couleur du texte */
+    background-color: #007bff; /* Couleur de fond */
+    transition: background-color 0.3s; /* Effet de transition */
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Couleur de fond au survol */
+}

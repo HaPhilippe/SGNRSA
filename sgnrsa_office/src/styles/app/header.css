@@ -1,45 +1,4 @@
 
-/* header {
-    background-color: #ecc5c5;
-}
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 100%;
-    background-color: #c4c4c4;
-}
-.avatar img {
-    width: 100%;
-    height: 100%;
-    border-radius: 100%;
-    object-fit: cover;
-}
-.breadCrumbItem {
-    transition: ease-in-out 250ms;
-}
-.breadCrumbItem:hover, .breadCrumbItem.active { 
-    background-color: #dfdfdf;
-    color: #6366F1 !important;
-}
-
- */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
  header {
     /* background-color: #fff; */
     background-color: #2C3E50;
@@ -131,33 +90,3 @@
               display: none !important;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

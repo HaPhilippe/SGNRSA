@@ -454,6 +454,7 @@ export default function Utilisateur_add_page() {
               </div>
             </div>
           </div>
+          
           <div style={{ position: 'absolute', bottom: 0, right: 0 }} className="w-100 d-flex justify-content-end shadow-4 pb-3 pr-5 bg-white">
             <Button label="Reinitialiser" type="reset" outlined className="mt-3" size="small" onClick={e => {
               e.preventDefault()

@@ -12,14 +12,9 @@ const RESPONSE_STATUS = require("./constants/RESPONSE_STATUS");
 const app = express();
 const bindUser = require("./middleware/bindUser");
 dotenv.config({ path: path.join(__dirname, "./.env") });
-
 const { Server } = require("socket.io");
-// const authRouter = require("./routes/auth/authRouter");
-const administrationRouter = require("./routes/administration/administartionRouter");
-
-const rapports_StageRouter = require("./routes/Rapports_Stage/rapports_StageRouter");
-
-
+const administrationRouter = require("./routes/administration/administartionRouter")
+const rapport_stageRouter = require("./routes/rapport_stage/rapport_stageRouter")
 // const systemRouter = require("./routes/system/systemRouter")
 app.use(cors());
 app.set('view engine', 'ejs');
@@ -29,12 +24,11 @@ app.use(express.json())
 app.use(fileUpload());
 
 app.all('*', bindUser)
-// app.use('/auth', authRouter)
-app.use('/administration', administrationRouter);
-// app.use('/system', systemRouter)
-// Ressources humaines
 
-app.use('/rapport_Stage', rapports_StageRouter);
+app.use('/administration', administrationRouter);
+app.use('/rapport_stage', rapport_stageRouter);
+
+
 app.all("*", (req, res) => {
           res.status(RESPONSE_CODES.NOT_FOUND).json({
                     statusCode: RESPONSE_CODES.NOT_FOUND,

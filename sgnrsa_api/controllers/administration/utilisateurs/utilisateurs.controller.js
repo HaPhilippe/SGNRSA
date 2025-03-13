@@ -8,6 +8,124 @@ const md5 = require('md5')
 const Profil = require("../../../models/Profil")
 const UtilisateurUpload = require("../../../class/uploads/UtilisateurUpload")
 const IMAGES_DESTINATIONS = require("../../../constants/IMAGES_DESTINATIONS")
+// const Utilisateursweb = require("../../../models/Utilisateursweb")
+// const Utilisateursweb = require("../../../models/Utilisateursweb")
+
+
+
+/**
+ * fonction  Permet de creer un utilisateur web
+* @date  22/10/2024
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @author hph <philippehatangimana.29dg@gmail.com>
+ */
+// const createUserweb = async (req, res) => {
+//   try {
+//     const { USERNAME, EMAIL, NOM, PRENOM } = req.body
+//     const files = req.files || {};
+//     const { IMAGE } = files;
+
+//     const data = { ...req.body, ...req.files };
+//     const validation = new Validation(data, {
+//       USERNAME: {
+//         required: true,
+//         length: [1, 30],
+//         alpha: true
+//       },
+
+//       EMAIL: {
+//         required: true,
+//         length: [1, 50],
+//         alpha: true,
+//         email: true,
+//         unique: "utilisateursweb,EMAIL",
+//       },
+//       NOM: {
+//         required: true,
+//         length: [1, 50],
+//         alpha: true
+//       },
+//       PRENOM: {
+//         required: true,
+//         length: [1, 50],
+//         alpha: true
+//       },
+
+//       IMAGE: {
+//         required: true,
+//         image: 4000000
+//       }
+//     }, {
+//       USERNAME: {
+//         required: "Ce champ est obligatoire",
+//         length: "Le nom d'utilisateur ne doit pas depasser max(30 caracteres)",
+//         alpha: "Le nom d'utilisateur est invalide"
+//       },
+
+//       EMAIL: {
+//         required: "Ce champ est obligatoire",
+//         length: "L'email ne doit pas depasser max(50 caracteres)",
+//         alpha: "L'email est invalide",
+//         email: "L'email n'existe pas",
+//         unique: "L'email doit etre unique",
+//       },
+//       NOM: {
+//         required: "Ce champ est obligatoire",
+//         length: "Le nom ne doit etre depasser max(50 carateres)",
+//         alpha: "Le nom est invalide"
+//       },
+//       PRENOM: {
+//         required: "Ce champ est obligatoire",
+//         length: "Le prenom ne doit etre depasser max(50 carateres)",
+//         alpha: "Le prenom est invalide"
+//       },
+
+//       IMAGE: {
+//         required: "Ce champ est obligatoire",
+//         image: "L'image ne doit pas depasser 4Mo "
+//       }
+//     })
+
+//     await validation.run()
+//     const isValid = await validation.isValidate()
+//     if (!isValid) {
+//       const errors = await validation.getErrors()
+//       return res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json({
+//         statusCode: RESPONSE_CODES.UNPROCESSABLE_ENTITY,
+//         httpStatus: RESPONSE_STATUS.UNPROCESSABLE_ENTITY,
+//         message: "Probleme de validation des donnees",
+//         result: errors
+//       })
+//     }
+
+//     const userUpload = new UtilisateurUpload();
+//     const { fileInfo } = await userUpload.upload(IMAGE, false);
+//     const userimage = `${req.protocol}://${req.get("host")}${IMAGES_DESTINATIONS.utilisateurs
+//       }/${fileInfo.fileName}`;
+
+//     const user = await Utilisateursweb.create({
+//       USERNAME,
+//       IMAGE: userimage,
+//       EMAIL,
+//       NOM,
+//       PRENOM
+//     })
+//     res.status(RESPONSE_CODES.CREATED).json({
+//       statusCode: RESPONSE_CODES.CREATED,
+//       httpStatus: RESPONSE_STATUS.CREATED,
+//       message: "Le compte utilisateur a bien ete cree avec succes",
+//       result: user
+//     })
+//   } catch (error) {
+//     console.log(error)
+//     res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+//       statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+//       httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+//       message: "Erreur interne du serveur, réessayer plus tard",
+//     })
+//   }
+// }
 
 
 
@@ -38,7 +156,7 @@ const createUser = async (req, res) => {
       },
       TELEPHONE: {
         required: true,
-        length: [1,8],
+        length: [1, 8],
         number: true,
         unique: "utilisateurs,TELEPHONE",
       },
@@ -68,17 +186,17 @@ const createUser = async (req, res) => {
         required: true,
         image: 4000000
       }
-    },{
+    }, {
       USERNAME: {
         required: "Ce champ est obligatoire",
-        length:"Le nom d'utilisateur ne doit pas depasser max(30 caracteres)",
+        length: "Le nom d'utilisateur ne doit pas depasser max(30 caracteres)",
         alpha: "Le nom d'utilisateur est invalide"
       },
-      
+
       ID_PROFIL: {
         required: "Ce champ est obligatoire",
         number: "Ce champ  doit avoir  un nombre vailde",
-        exists:"le profile n'existe pas"
+        exists: "le profile n'existe pas"
       },
       TELEPHONE: {
         required: "Ce champ est obligatoire",
@@ -100,7 +218,7 @@ const createUser = async (req, res) => {
       },
       PRENOM: {
         required: "Ce champ est obligatoire",
-        length:"Le prenom ne doit etre depasser max(50 carateres)",
+        length: "Le prenom ne doit etre depasser max(50 carateres)",
         alpha: "Le prenom est invalide"
       },
       MATRICULE: {
@@ -170,14 +288,14 @@ const updateUtil = async (req, res) => {
 
   try {
     const { ID_UTILISATEUR } = req.params;
-    const { USERNAME, PASSWORD, ID_PROFIL, TELEPHONE, EMAIL, NOM, PRENOM,MATRICULE } = req.body
+    const { USERNAME, PASSWORD, ID_PROFIL, TELEPHONE, EMAIL, NOM, PRENOM, MATRICULE } = req.body
     const files = req.files || {};
-    const {IMAGE} = files;
+    const { IMAGE } = files;
     const usersObject = await Utilisateurs.findByPk(ID_UTILISATEUR, {
-      attributes: ["IMAGE","ID_UTILISATEUR"],
+      attributes: ["IMAGE", "ID_UTILISATEUR"],
     });
     const user = usersObject.toJSON().IMAGE;
-   
+
 
     const data = { ...req.body, ...req.files };
     const validation = new Validation(data, {
@@ -193,16 +311,16 @@ const updateUtil = async (req, res) => {
       },
       TELEPHONE: {
         required: true,
-        length: [1,8],
+        length: [1, 8],
         number: true,
-        
+
       },
       EMAIL: {
         required: true,
         length: [1, 50],
         alpha: true,
         email: true,
-       
+
       },
       NOM: {
         required: true,
@@ -219,31 +337,31 @@ const updateUtil = async (req, res) => {
         length: [1, 50],
         alpha: true
       },
-      
-    },{
+
+    }, {
       USERNAME: {
         required: "Ce champ est obligatoire",
-        length:"Le nom d'utilisateur ne doit pas depasser max(30 caracteres)",
+        length: "Le nom d'utilisateur ne doit pas depasser max(30 caracteres)",
         alpha: "Le nom d'utilisateur est invalide"
       },
-      
+
       ID_PROFIL: {
         required: "Ce champ est obligatoire",
         number: "Ce champ  doit avoir  un nombre vailde",
-        exists:"le profile n'existe pas"
+        exists: "le profile n'existe pas"
       },
       TELEPHONE: {
         required: "Ce champ est obligatoire",
         length: "Le numero de telephone ne doit pas depasser max(8 chiffres)",
         number: "Le numero de telephone doit etre un nombre",
-       
+
       },
       EMAIL: {
         required: "Ce champ est obligatoire",
         length: "L'email ne doit pas depasser max(50 caracteres)",
         alpha: "L'email est invalide",
         email: "L'email n'existe pas",
-       
+
       },
       NOM: {
         required: "Ce champ est obligatoire",
@@ -252,7 +370,7 @@ const updateUtil = async (req, res) => {
       },
       PRENOM: {
         required: "Ce champ est obligatoire",
-        length:"Le prenom ne doit etre depasser max(50 carateres)",
+        length: "Le prenom ne doit etre depasser max(50 carateres)",
         alpha: "Le prenom est invalide"
       },
       MATRICULE: {
@@ -260,7 +378,7 @@ const updateUtil = async (req, res) => {
         length: "Le numero matricule ne doit pas depasser max(50 caracteres)",
         alpha: "Le numero matricule est invalide"
       },
-      
+
 
     })
     await validation.run()
@@ -278,7 +396,7 @@ const updateUtil = async (req, res) => {
     var userImge
     if (IMAGE) {
       const usersUpload = new UtilisateurUpload();
-      const { fileInfo } = await usersUpload.upload(IMAGE,false);
+      const { fileInfo } = await usersUpload.upload(IMAGE, false);
       userImge = `${req.protocol}://${req.get("host")}${IMAGES_DESTINATIONS.utilisateurs}/${fileInfo.fileName}`;
     }
 
@@ -321,10 +439,10 @@ const updateUtil = async (req, res) => {
  * @param {express.Response} res 
  * @author hph <philippehatangimana.29dg@gmail.com>
  */
-const profileliste=async(req,res)=>{
+const profileliste = async (req, res) => {
   try {
-    const profile=await Profil.findAll({
-      attributes:['ID_PROFIL','DESCRIPTION']
+    const profile = await Profil.findAll({
+      attributes: ['ID_PROFIL', 'DESCRIPTION']
     })
 
     res.status(RESPONSE_CODES.CREATED).json({
@@ -333,7 +451,7 @@ const profileliste=async(req,res)=>{
       message: "Listes des profiles",
       result: profile
     })
-    
+
   } catch (error) {
     console.log(error)
     res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
@@ -596,5 +714,6 @@ module.exports = {
   findOneUtilisateur,
   updateUtil,
   profileliste,
-  change_status
+  change_status,
+  // createUserweb
 }

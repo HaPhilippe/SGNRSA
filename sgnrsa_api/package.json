@@ -1,4 +1,4 @@
-    {
+{
   "name": "sgnrsa_api",
   "version": "1.0.0",
   "description": "",
@@ -33,7 +33,7 @@
     "path-browserify": "^1.0.1",
     "randombytes": "^2.1.0",
     "sequelize": "^6.37.3",
-    "sharp": "^0.31.3",
+    "sharp": "^0.33.5",
     "socket.io": "^4.7.5",
     "sqlite3": "^5.1.7",
     "util": "^0.12.5"

@@ -167,9 +167,9 @@ const createetudiant = async (req, res) => {
 const updateetudiant = async (req, res) => {
 
   try {
-    const { ID_ENCA } = req.params;
+    const { ID_ETUD } = req.params;
 
-    const { NOM, PRENOM, EMAIL, ID_DEPARTEMENT, DATE_NAISSANCE, GENR, ADRESS } = req.body
+    const { NOM, PRENOM, EMAIL, ID_DEPARTEMENT,ID_ENCA, DATE_NAISSANCE, GENR, ADRESS } = req.body
     const files = req.files || {};
     const { PROFIL } = files;
     const data = { ...req.body, ...req.files };
@@ -271,7 +271,7 @@ const updateetudiant = async (req, res) => {
         EMAIL,
         ID_DEPARTEMENT,
         ID_ENCA,
-        NUMERO_CARTE: numerocarte,
+        // NUMERO_CARTE: numerocarte,
         DATE_NAISSANCE,
         GENR,
         PROFIL: etudiantProfil,

@@ -196,10 +196,10 @@ const findAll = async (req, res) => {
       where: {
         ...globalSearchWhereLike,
       },
-      include:{
-        model:Faculte,
-        as:'faculte',
-        required:false
+      include: {
+        model: Faculte,
+        as: 'faculte',
+        required: false
       }
     })
     res.status(RESPONSE_CODES.OK).json({
@@ -222,8 +222,91 @@ const findAll = async (req, res) => {
 }
 
 
+/**
+ * Permet pour recuperer un departement selon l'id
+* @date  06/08/2024
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @author hph <philippehatangimana.29dg@gmail.com>
+ */
+const findOneDeparement = async (req, res) => {
+  try {
+    const { ID_DEPARTEMENT } = req.params
+    const departement = await Departement.findOne({
+      where: {
+        ID_DEPARTEMENT
+      },
+      include: {
+        model: Faculte,
+        as: 'faculte',
+        required: false
+      }
+    })
+    if (departement) {
+      res.status(RESPONSE_CODES.OK).json({
+        statusCode: RESPONSE_CODES.OK,
+        httpStatus: RESPONSE_STATUS.OK,
+        message: "Le departement",
+        result: departement
+      })
+    } else {
+      res.status(RESPONSE_CODES.NOT_FOUND).json({
+        statusCode: RESPONSE_CODES.NOT_FOUND,
+        httpStatus: RESPONSE_STATUS.NOT_FOUND,
+        message: "Le departement non trouve",
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    })
+  }
+}
+
+/**
+ * Permet pour recuperer une faculté selon l'id
+* @date  06/08/2024
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @author hph <philippehatangimana.29dg@gmail.com>
+ */
+const findOneFaculte = async (req, res) => {
+  try {
+    const { ID_FAC } = req.params
+    const faculte = await Faculte.findOne({
+      where: {
+        ID_FAC
+      }
+    })
+    if (faculte) {
+      res.status(RESPONSE_CODES.OK).json({
+        statusCode: RESPONSE_CODES.OK,
+        httpStatus: RESPONSE_STATUS.OK,
+        message: "La faculte",
+        result: faculte
+      })
+    } else {
+      res.status(RESPONSE_CODES.NOT_FOUND).json({
+        statusCode: RESPONSE_CODES.NOT_FOUND,
+        httpStatus: RESPONSE_STATUS.NOT_FOUND,
+        message: "La faculte non trouve",
+      })
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    })
+  }
+}
+
 // /**
-// * Modifier un profil via son id
+// * Modifier une faculte et departement via son id
 // * @date  06/08/2024
 //  * @param {express.Request} req 
 //  * @param {express.Response} res 
@@ -232,23 +315,55 @@ const findAll = async (req, res) => {
 // const updateFaculte = async (req, res) => {
 
 //   try {
-//     const { ID_PROFIL } = req.params;
-//     const { DESCRIPTION, roles } = req.body
+//     const { ID_DEPARTEMENT } = req.params;
+//     const {NOM_DEPARTEMENT,DESIGNATION_DEP} = req.body
 //     const data = { ...req.body };
-//     const validation = new Validation(data, {
-//       DESCRIPTION: {
-//         required: true,
-//         length: [1, 50],
-//         alpha: true
-//       }
+//     // console.log(data,'daaaaaaata');
 
-//     }, {
-//       DESCRIPTION: {
-//         required: "Ce champ est obligatoire",
-//         length: "La description ne doit pas depasser max(50 caracteres)",
-//         alpha: "La description est invalide"
-//       }
-//     })
+// const validation = new Validation(data, {
+//   NOM:{
+//    required:true,
+//    length:true,
+//    alpha:[1,100]
+//   },
+//   DESCRIPTION: {
+//     required: true,
+//     length: [1, 250],
+//     alpha: true
+//   },
+//   NOM_DEPARTEMENT: {
+//     required: true,
+//     length: [1, 100],
+//     alpha: true
+//   },
+//   DESIGNATION_DEP: {
+//     required: true,
+//     length: [1, 250],
+//     alpha: true
+//   }
+
+// }, {
+//   NOM: {
+//     required: "Ce champ est obligatoire",
+//     length: "Le nom ne doit pas depasser max(100 caracteres)",
+//     alpha: "Le nom est invalide"
+//   },
+//   DESCRIPTION: {
+//     required: "Ce champ est obligatoire",
+//     length: "La description ne doit pas depasser max(250 caracteres)",
+//     alpha: "La description est invalide"
+//   },
+//   NOM_DEPARTEMENT: {
+//     required: "Ce champ est obligatoire",
+//     length: "Le nom de departement ne doit pas depasser max(100 caracteres)",
+//     alpha: "La description est invalide"
+//   },
+//   DESIGNATION_DEP: {
+//     required: "Ce champ est obligatoire",
+//     length: "La designation ne doit pas depasser max(250 caracteres)",
+//     alpha: "La designation est invalide"
+//   }
+// })
 //     await validation.run()
 //     const isValid = await validation.isValidate()
 //     if (!isValid) {
@@ -261,31 +376,17 @@ const findAll = async (req, res) => {
 //       })
 //     }
 
-//     const profiledit = await Profil.update({
-//       DESCRIPTION
+//     const faculte_depart = await Departement.update({
+//       NOM_DEPARTEMENT,DESIGNATION_DEP
 //     }, {
-//       where: { ID_PROFIL: ID_PROFIL }
+//       where: { ID_DEPARTEMENT: ID_DEPARTEMENT }
 //     })
-//     const allrole = JSON.parse(roles)
-//     await Profil_roles.destroy({
-//       where: { ID_PROFIL: ID_PROFIL }
-//     })
-//     const roleData = allrole.map(reponse => {
-//       return {
-//         ID_PROFIL: ID_PROFIL,
-//         ID_ROLE: reponse.ID_ROLE,
-//         CAN_READ: reponse.CAN_READ,
-//         CAN_WRITE: reponse.CAN_WRITE
-//       }
-//     })
-
-//     await Profil_roles.bulkCreate(roleData)
 
 //     res.status(RESPONSE_CODES.CREATED).json({
 //       statusCode: RESPONSE_CODES.CREATED,
 //       httpStatus: RESPONSE_STATUS.CREATED,
-//       message: "Le profile a modifie avec succes",
-//       // result: profiledit
+//       message: "La faculte a modifie avec succes",
+//       return:faculte_depart,
 //     });
 
 //   } catch (error) {
@@ -300,181 +401,213 @@ const findAll = async (req, res) => {
 // };
 
 
+/**
+ * Permet pour la modification d'un faculté
+* @date  06/08/2024
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @author hph <philippehatangimana.29dg@gmail.com>
+ */
+const updateDepartement = async (req, res) => {
+
+  try {
+    const { ID_DEPARTEMENT } = req.params;
+    // return console.log(ID_DEPARTEMENT,typeof(ID_DEPARTEMENT));
+  
+    const { NOM_DEPARTEMENT, DESIGNATION_DEP } = req.body;
+
+    const data = { ...req.body };
+    const validation = new Validation(data, {
+
+      NOM_DEPARTEMENT: {
+        required: true,
+        length: [1, 100],
+        alpha: true
+      },
+      DESIGNATION_DEP: {
+        required: true,
+        length: [1, 250],
+        alpha: true
+      }
+
+    }, {
+
+      NOM_DEPARTEMENT: {
+        required: "Ce champ est obligatoire",
+        length: "Le nom de departement ne doit pas depasser max(100 caracteres)",
+        alpha: "La description est invalide"
+      },
+      DESIGNATION_DEP: {
+        required: "Ce champ est obligatoire",
+        length: "La designation ne doit pas depasser max(250 caracteres)",
+        alpha: "La designation est invalide"
+      }
+    })
+    await validation.run()
+    const isValid = await validation.isValidate()
+    if (!isValid) {
+      const errors = await validation.getErrors()
+      return res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json({
+        statusCode: RESPONSE_CODES.UNPROCESSABLE_ENTITY,
+        httpStatus: RESPONSE_STATUS.UNPROCESSABLE_ENTITY,
+        message: "Probleme de validation des donnees",
+        result: errors
+      })
+    }
+
+    // var userImge
+    // if (IMAGE) {
+    //   const usersUpload = new UtilisateurUpload();
+    //   const { fileInfo } = await usersUpload.upload(IMAGE, false);
+    //   userImge = `${req.protocol}://${req.get("host")}${IMAGES_DESTINATIONS.utilisateurs}/${fileInfo.fileName}`;
+    // }
+
+    const departement = await Departement.update(
+      {
+        NOM_DEPARTEMENT,
+        DESIGNATION_DEP
+      },
+      {
+        where: { ID_DEPARTEMENT: ID_DEPARTEMENT }
+      })
+
+    res.status(RESPONSE_CODES.CREATED).json({
+      statusCode: RESPONSE_CODES.CREATED,
+      httpStatus: RESPONSE_STATUS.CREATED,
+      message: "Le departement été a modifie avec succes",
+      result: departement
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    });
+  }
+
+};
 
 
+/**
+ * Permet pour la modification d'un faculté
+* @date  06/08/2024
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @author hph <philippehatangimana.29dg@gmail.com>
+ */
+const updateFaculte = async (req, res) => {
 
-// /**
-//  * Permet de supprimer le profile selon l'id
-// * @date  06/08/2024
-//  * @param {express.Request} req 
-//  * @param {express.Response} res 
-//  * @author hph <philippehatangimana.29dg@gmail.com>
-//  */
+  try {
+    const {ID_FAC}  = req.params;
+    // return console.log(ID_FAC,typeof(ID_FAC),'facul');
+    const { NOM, DESCRIPTION } = req.body
+  
 
-// const deleteItems = async (req, res) => {
-//   try {
-//     const { ids } = req.body
-//     const itemsIds = JSON.parse(ids)
-//     await Profil.destroy({
-//       where: {
-//         ID_PROFIL: {
-//           [Op.in]: itemsIds
-//         }
-//       }
-//     })
-//     res.status(RESPONSE_CODES.OK).json({
-//       statusCode: RESPONSE_CODES.OK,
-//       httpStatus: RESPONSE_STATUS.OK,
-//       message: "Les elements ont ete supprimer avec success",
-//     })
-//   } catch (error) {
-//     console.log(error)
-//     res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
-//       statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
-//       httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
-//       message: "Erreur interne du serveur, réessayer plus tard",
-//     })
-//   }
-// }
+    const data = { ...req.body };
+    const validation = new Validation(data, {
+      NOM: {
+        required: true,
+        length: true,
+        alpha: [1, 100]
+      },
+      DESCRIPTION: {
+        required: true,
+        length: [1, 250],
+        alpha: true
+      }
 
-// /**
-//  * Permet pour recuperer un profile selon l'id
-// * @date  06/08/2024
-//  * @param {express.Request} req 
-//  * @param {express.Response} res 
-//  * @author hph <philippehatangimana.29dg@gmail.com>
-//  */
-// const findOneFaculte = async (req, res) => {
-//   try {
-//     const { ID_PROFIL } = req.params
-//     const utilisateur = await Profil.findOne({
-//       where: {
-//         ID_PROFIL
-//       },
-//       include: [
-//         {
-//           model: Profil_roles,
-//           as: "profil_roles",
-//           required: false,
-//           attributes: ["ID_PROFIL_ROLE", "ID_ROLE", "CAN_READ", "CAN_WRITE"],
-//           order: [["ID_ROLE", "ASC"]],
-//           include: [{
-//             model: Roles,
-//             as: "role",
-//             required: false,
-//             attributes: ["ID_ROLE", "ROLE"],
-//           }],
-//         },
-//       ],
-//       order: [
-//         [{ model: Profil_roles, as: "profil_roles" }, "ID_ROLE", "ASC"]
-//       ]
-//     })
-//     if (utilisateur) {
-//       res.status(RESPONSE_CODES.OK).json({
-//         statusCode: RESPONSE_CODES.OK,
-//         httpStatus: RESPONSE_STATUS.OK,
-//         message: "Profil",
-//         result: utilisateur
-//       })
-//     } else {
-//       res.status(RESPONSE_CODES.NOT_FOUND).json({
-//         statusCode: RESPONSE_CODES.NOT_FOUND,
-//         httpStatus: RESPONSE_STATUS.NOT_FOUND,
-//         message: "Profil non trouvé",
-//       })
-//     }
-//   } catch (error) {
-//     console.log(error)
-//     res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
-//       statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
-//       httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
-//       message: "Erreur interne du serveur, réessayer plus tard",
-//     })
-//   }
-// }
+    }, {
+      NOM: {
+        required: "Ce champ est obligatoire",
+        length: "Le nom ne doit pas depasser max(100 caracteres)",
+        alpha: "Le nom est invalide"
+      },
+      DESCRIPTION: {
+        required: "Ce champ est obligatoire",
+        length: "La description ne doit pas depasser max(250 caracteres)",
+        alpha: "La description est invalide"
+      }
+    })
+    await validation.run()
+    const isValid = await validation.isValidate()
+    if (!isValid) {
+      const errors = await validation.getErrors()
+      return res.status(RESPONSE_CODES.UNPROCESSABLE_ENTITY).json({
+        statusCode: RESPONSE_CODES.UNPROCESSABLE_ENTITY,
+        httpStatus: RESPONSE_STATUS.UNPROCESSABLE_ENTITY,
+        message: "Probleme de validation des donnees",
+        result: errors
+      })
+    }
+    const faculte = await Faculte.update(
+      {
+        NOM,
+        DESCRIPTION
+      },
+      {
+        where: { ID_FAC: ID_FAC }
+      })
+    res.status(RESPONSE_CODES.CREATED).json({
+      statusCode: RESPONSE_CODES.CREATED,
+      httpStatus: RESPONSE_STATUS.CREATED,
+      message: "La faculte été a modifie avec succes",
+      result: faculte
+    });
 
-// /**
-//  * Permet de trouver les roles
-// * @date  06/08/2024
-//  * @param {express.Request} req 
-//  * @param {express.Response} res 
-//  * @author hph <philippehatangimana.29dg@gmail.com>
-//  */
+  } catch (error) {
+    console.log(error);
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    });
+  }
 
-// const findAllrole = async (req, res) => {
-//   try {
-//     const allroles = await Roles.findAll({
-//       attributes: ["ID_ROLE", "ROLE", "DATE_INSERTION"],
-//       order: [["ID_ROLE", "ASC"]]
-//     })
-
-//     res.status(RESPONSE_CODES.OK).json({
-//       statusCode: RESPONSE_CODES.OK,
-//       httpStatus: RESPONSE_STATUS.OK,
-//       result: allroles
-//     })
-//   } catch (error) {
-//     console.log(error)
-//     res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
-//       statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
-//       httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
-//       message: "Erreur interne du serveur, réessayer plus tard",
-//     })
-//   }
-// }
+};
 
 
-// /**
-//  * Permet de recuperer les droits de l'utilisateur
-// * @date  06/08/2024
-//  * @param {express.Request} req 
-//  * @param {express.Response} res 
-//  * @author hph <philippehatangimana.29dg@gmail.com>
-//  */
-// const findRoleByIdProfile = async (req, res) => {
-//   try {
-//     const { ID_PROFIL } = req.params
-//     const profilId = await Profil_roles.findAll({
-//       attributes: ["ID_PROFIL_ROLE", "ID_ROLE", "CAN_READ", "CAN_WRITE"],
-//       order: [["ID_ROLE", "ASC"]],
-//       include: [{
-//         model: Roles,
-//         as: "role",
-//         required: false,
-//         attributes: ["ID_ROLE", "ROLE"]
-//       }
-//       ],
-//       where: {
-//         ID_PROFIL
-//       }
-//     })
-//     if (profilId) {
-//       res.status(RESPONSE_CODES.OK).json({
-//         statusCode: RESPONSE_CODES.OK,
-//         httpStatus: RESPONSE_STATUS.OK,
-//         message: "profile trouvee",
-//         result: profilId
-//       })
-//     } else {
-//       res.status(RESPONSE_CODES.NOT_FOUND).json({
-//         statusCode: RESPONSE_CODES.NOT_FOUND,
-//         httpStatus: RESPONSE_STATUS.NOT_FOUND,
-//         message: "profile non trouve",
-//       })
-//     }
-//   } catch (error) {
-//     console.log(error)
-//     res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
-//       statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
-//       httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
-//       message: "Erreur interne du serveur, réessayer plus tard",
-//     })
-//   }
-// }
+/**
+ * Permet pour la suppressiuon d'un departement
+* @date  06/08/2024
+ * @param {express.Request} req 
+ * @param {express.Response} res 
+ * @author hph <philippehatangimana.29dg@gmail.com>
+ */
+const deleteItems = async (req, res) => {
+  try {
+    const { ids } = req.body
+    const itemsIds = JSON.parse(ids)
+    await Departement.destroy({
+      where: {
+        ID_DEPARTEMENT: {
+          [Op.in]: itemsIds
+        }
+      }
+    })
+    res.status(RESPONSE_CODES.OK).json({
+      statusCode: RESPONSE_CODES.OK,
+      httpStatus: RESPONSE_STATUS.OK,
+      message: "Les elements ont ete supprimer avec success",
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(RESPONSE_CODES.INTERNAL_SERVER_ERROR).json({
+      statusCode: RESPONSE_CODES.INTERNAL_SERVER_ERROR,
+      httpStatus: RESPONSE_STATUS.INTERNAL_SERVER_ERROR,
+      message: "Erreur interne du serveur, réessayer plus tard",
+    })
+  }
+}
 
 
 module.exports = {
   createFaculte_departements,
-  findAll
+  findAll,
+  updateDepartement,
+  updateFaculte,
+  findOneFaculte,
+  findOneDeparement,
+  deleteItems
 }

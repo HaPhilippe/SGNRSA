@@ -121,9 +121,12 @@ const updateEntreprise = async (req, res) => {
 
   try {
     const { ID_ENTREPR } = req.params;
-    const { NOM_ENTREPR, ADRESSE_ENTREPR, SECTEUR, LOGO_ENTREPR } = req.body
-
-    const data = { ...req.body };
+    const { NOM_ENTREPR, ADRESSE_ENTREPR, SECTEUR, NOM_TUT, PRENOM_TUT, EMAIL, } = req.body;
+    const files = req.files || {};
+    const { LOGO_ENTREPR } = files;
+    const data = { ...req.body, ...req.files };
+    ;
+    
     const validation = new Validation(data, {
       NOM_ENTREPR: {
         required: true,
@@ -139,11 +142,6 @@ const updateEntreprise = async (req, res) => {
         required: true,
         length: [1, 50],
         alpha: true
-      },
-      LOGO_ENTREPR: {
-        required: true,
-        length: [1, 250],
-        alpha: true,
       }
     }, {
       NOM_ENTREPR: {
@@ -160,12 +158,8 @@ const updateEntreprise = async (req, res) => {
         required: "Ce champ est obligatoire",
         length: "Le secteur de l'entreprise ne doit pas depasser max(50 caracteres)",
         alpha: "Le secteur de l'entreprise est invalide"
-      },
-      LOGO_ENTREPR: {
-        required: "Ce champ est obligatoire",
-        length: "Le logo entreprise ne doit pas depasser max(250 caracteres)",
-        alpha: "Le logo entreprise est invalide"
       }
+    
     })
     await validation.run()
     const isValid = await validation.isValidate()
@@ -180,9 +174,20 @@ const updateEntreprise = async (req, res) => {
     }
 
 
+    const logoUpload = new EntreriseUpload();
+    const { fileInfo } = await logoUpload.upload(LOGO_ENTREPR, false);
+    const logoimage = `${req.protocol}://${req.get("host")}${IMAGES_DESTINATIONS.entreprise
+      }/${fileInfo.fileName}`;
+
     const updateEntrep = await Entreprise.update(
       {
-        NOM_ENTREPR, ADRESSE_ENTREPR, SECTEUR, LOGO_ENTREPR
+        NOM_ENTREPR,
+        ADRESSE_ENTREPR,
+        SECTEUR,
+        NOM_TUT,
+        PRENOM_TUT,
+        EMAIL,
+        LOGO_ENTREPR: logoimage
       },
       {
         where: { ID_ENTREPR: ID_ENTREPR }
